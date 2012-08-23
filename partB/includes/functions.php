@@ -1,20 +1,19 @@
 <?php
 
 
-	# Simple Query to Array (1 Element)
-	function sqlToArray($sql, $element) {
-	
+	# Simple Query to Array
+	#
+	#	Reference
+	#		-> http://php.net/manual/en/function.mysql-fetch-array.php
+	#
+	function sqlToArray($query) {
+
 		# Execute Query
-		$resource = mysql_query($sql) or die(mysql_error()); 
+		$resource = mysql_query($query) or die(mysql_error()); 
  
-		# Initliaze Empty Array
-		$resultArray = array(); 
-		
-		# Store Results in Array
-		while($array=mysql_fetch_assoc($resource)) 	{ 
-			$resultArray[] = $array[$element];
-		} 
-		
+		# Save To Array
+		while( $array[] = mysql_fetch_array($resource) );
+
 		# Return Array
-		return $resultArray;
+		return $array;
 	}
