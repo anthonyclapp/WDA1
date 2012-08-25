@@ -53,7 +53,7 @@
 ?>
 <html>
 	<head>
-		<title>WDA - Assignment 1 - Part B</title>
+		<title>WDA - Assignment 1 - Part B - Home</title>
 		<script type="text/javascript" language="javascript">
 			function range_check(min, max) {
 				if ( min > max ) {
