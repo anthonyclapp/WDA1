@@ -17,3 +17,18 @@
 		# Return Array
 		return $array;
 	}
+	
+	
+	# Security Fix
+	#
+	#	Reference
+	#		-> http://stackoverflow.com/questions/1587695/sanitize-get-parameters-to-avoid-xss-and-other-attacks
+	#
+	function securityCheck($input) {
+		$inputTest = preg_replace('/[^-a-zA-Z0-9_]/', '', $input);
+		if ( $input != $inputTest ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
