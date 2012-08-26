@@ -48,12 +48,12 @@
 		$query .= " AND wine.wine_name LIKE '%$wine_name%'";
 	}
 	if ( ! strlen($winery_name) == 0) {
-		$query .= " AND winery_name LIKE '%.$winery_name.%'";
+		$query .= " AND winery_name LIKE '%$winery_name%'";
 	}
    if (isset($region) && $region != "1"){
       $query .= " AND region.region_id = '$region'";
    }
-   if (isset($grape_variety) && $grape_variety != "1"){
+   if (isset($grape_variety) && $grape_variety != "All"){
       $query .= " AND variety.grape_variety = '$grape_variety'";
    }   
    if (isset($stock_min)){
@@ -80,7 +80,7 @@
 	
 	# Query to Array
 	$results = sqlToArray($query);
-	
+
 ?>
 <html>
 	<head>
@@ -91,7 +91,10 @@
          <tr>
             <td colspan="8"></td>
             <th>Total</th>
-            <td><?php echo count($results); ?></td>            
+            <td><?php
+            if ($results[0] == NULL) {echo '0';}
+            else {echo count($results);}
+               ?></td>            
          </tr>
 			<tr>
             <th>Wine ID</th>
@@ -107,7 +110,9 @@
 				<th>Sales Revenue</th>
 			</tr>
             <?php
-	            foreach ($results as $result) {
+	            if ($results[0] != NULL)                  
+                {               
+               foreach ($results as $result) {
 
                   # Variables
                   $wine_id = $result['wine_id'];
@@ -137,8 +142,10 @@
                            <td>'.$price.'</td>
                         </tr>';                        
 
-               }   
+               }
+               }
             ?>
-		</table>
+      </table>
+               <?if ($results[0] == NULL) {echo 'No records match your search criteria';}?>
 	</body>
 </html>
