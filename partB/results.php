@@ -32,15 +32,31 @@
 	}
 	
 	# Prepare Query
-	$query = 'SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
-            FROM wine, wine_variety, grape_variety, winery, region, inventory, items
-            WHERE wine.wine_id = wine_variety.wine_id
-            AND wine_variety.variety_id = grape_variety.variety_id
-            AND wine.winery_id = winery.winery_id
-            AND winery.region_id = region.region_id
-            AND wine.wine_id = inventory.wine_id
-            AND wine.wine_id = items.wine_id
-            AND wine_variety.id = 1 
+// SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
+// FROM wine, wine_variety, grape_variety, winery, region, inventory, items
+// WHERE wine.wine_id = wine_variety.wine_id
+// AND wine_variety.variety_id = grape_variety.variety_id
+// AND wine.winery_id = winery.winery_id
+// AND winery.region_id = region.region_id
+// AND wine.wine_id = inventory.wine_id
+// AND wine.wine_id = items.wine_id
+// AND wine_variety.id = 1 
+// AND inventory.inventory_id = 1
+	$query = 'SELECT DISTINCT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, item_id, qty, on_hand, sum(qty) ,sum(price)
+            FROM wine
+            JOIN wine_variety
+            ON wine.wine_id = wine_variety.wine_id
+            JOIN winery 
+            ON wine.winery_id=winery.winery_id
+            JOIN region
+            ON winery.region_id=region.region_id
+            JOIN inventory
+            ON wine.wine_id=inventory.wine_id
+            JOIN items 
+            ON wine.wine_id = items.wine_id 
+            JOIN grape_variety
+            ON wine_variety.variety_id = grape_variety.variety_id
+            WHERE wine_variety.id = 1 
             AND inventory.inventory_id = 1';
             
    # Append To Query
@@ -57,22 +73,22 @@
       $query .= " AND variety.grape_variety = '$grape_variety'";
    }   
    if (isset($stock_min)){
-      $query .= " AND inventory.on_hand > '$stock_min'";
+      $query .= " AND inventory.on_hand >= '$stock_min'";
    }   
    if (isset($stock_max)){
-      $query .= " AND inventory.on_hand < '$stock_max'";
+      $query .= " AND inventory.on_hand <= '$stock_max'";
    }
    if (isset($year_min)){
-      $query .= " AND wine.year > '$year_min'";
+      $query .= " AND wine.year >= '$year_min'";
    }   
    if (isset($year_max)){
-      $query .= " AND wine.year < '$year_max'";
+      $query .= " AND wine.year <= '$year_max'";
    }   
    if (isset($cost_min)){
-      $query .= " AND inventory.cost > '$cost_min'";
+      $query .= " AND inventory.cost >= '$cost_min'";
    }   
    if (isset($cost_max)){
-      $query .= " AND inventory.cost < '$cost_max'";
+      $query .= " AND inventory.cost <= '$cost_max'";
    }
 
    $query .= " GROUP BY wine.wine_id";
@@ -125,7 +141,7 @@
                   $on_hand = $result['on_hand'];
                   $item_id = $result['item_id'];
                   $qty = $result['qty'];
-                  $price = $result['price'];
+                  $price = $result['sum(price)'];
 
                   # Generate Rows
                   echo '<tr>

@@ -91,3 +91,15 @@
             AND wine.wine_id = inventory.wine_id
             AND wine.wine_id = items.wine_id
             AND wine.wine_name LIKE '%mitr%';
+            
+            
+            SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
+            FROM wine, wine_variety, grape_variety, winery, region, inventory, items
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id
+            AND wine.winery_id = winery.winery_id
+            AND winery.region_id = region.region_id
+            AND wine.wine_id = inventory.wine_id
+            AND wine.wine_id = items.wine_id
+            AND wine_variety.id = 1 
+            AND inventory.inventory_id = 1
