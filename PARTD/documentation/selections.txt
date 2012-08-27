@@ -1,0 +1,10 @@
+What to select - Table Name - Field Name
+
+Wine Name - wine - wine_name
+Grape Variety - grape_variety - variety
+Year - wine - year
+Winery - winery - winery_name
+Region - region - region_name
+Cost - inventory - cost
+Stock - inventory - on_hand
+Sales Revenue - items - wine_id / item_id / qty / price
