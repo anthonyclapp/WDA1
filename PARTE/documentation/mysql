@@ -1,0 +1,93 @@
+[ Desired Colum - Table - Colum Name ]
+
+   [ Wine Name / Year - wine - wine_name, year ]
+
+      -> Query
+
+      	SELECT wine_name, year FROM wine;
+
+   [ Grape Variety - grape_variety - variety ] 
+
+      -> wine_variety [foreign key -> wine_id]
+         -> Test
+	         SELECT wine_name, year
+            FROM wine, wine_variety 
+            WHERE wine.wine_id = wine_variety.wine_id
+;
+         -> grape_variety [foreign key -> variety_id]
+
+     -> Query
+
+		      SELECT wine_name, year, variety 
+            FROM wine, wine_variety, grape_variety
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id;
+
+  [ Winery - winery - winery_name ]
+
+      -> winery [foreign key -> winery_id]
+
+      -> Query
+
+         SELECT wine_name, variety, year, winery_name
+         FROM wine, wine_variety, grape_variety, winery
+         WHERE wine.wine_id = wine_variety.wine_id
+         AND wine_variety.variety_id = grape_variety.variety_id
+         AND wine.winery_id = winery.winery_id;
+
+
+   [ Region - region - region_name ]
+
+      -> region [foreign key -> region_id]
+
+      -> Query
+
+            SELECT wine_name, variety, year, winery_name, region_name
+            FROM wine, wine_variety, grape_variety, winery, region
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id
+            AND wine.winery_id = winery.winery_id
+            AND winery.region_id = region.region_id;
+
+
+   [ Stock/Cost - inventory - cost, on_hand ]
+
+      -> inventory [foreign key -> wine_id]
+
+      -> Query
+
+            SELECT wine_name, variety, year, winery_name, region_name, cost, on_hand
+            FROM wine, wine_variety, grape_variety, winery, region, inventory
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id
+            AND wine.winery_id = winery.winery_id
+            AND winery.region_id = region.region_id
+            AND wine.wine_id = inventory.wine_id;
+
+
+   [ ItemID, Quantity, Price - items - item_id, qty, price ] 
+
+      -> items [foreign key -> wine_id] 
+
+      -> Query
+
+            SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
+            FROM wine, wine_variety, grape_variety, winery, region, inventory, items
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id
+            AND wine.winery_id = winery.winery_id
+            AND winery.region_id = region.region_id
+            AND wine.wine_id = inventory.wine_id
+            AND wine.wine_id = items.wine_id
+            GROUP BY wine.wine_id;
+
+            
+            SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
+            FROM wine, wine_variety, grape_variety, winery, region, inventory, items
+            WHERE wine.wine_id = wine_variety.wine_id
+            AND wine_variety.variety_id = grape_variety.variety_id
+            AND wine.winery_id = winery.winery_id
+            AND winery.region_id = region.region_id
+            AND wine.wine_id = inventory.wine_id
+            AND wine.wine_id = items.wine_id
+            AND wine.wine_name LIKE '%mitr%';

@@ -32,16 +32,6 @@
 	}
 	
 	# Prepare Query
-// SELECT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, on_hand, item_id, qty, price
-// FROM wine, wine_variety, grape_variety, winery, region, inventory, items
-// WHERE wine.wine_id = wine_variety.wine_id
-// AND wine_variety.variety_id = grape_variety.variety_id
-// AND wine.winery_id = winery.winery_id
-// AND winery.region_id = region.region_id
-// AND wine.wine_id = inventory.wine_id
-// AND wine.wine_id = items.wine_id
-// AND wine_variety.id = 1 
-// AND inventory.inventory_id = 1
 	$query = 'SELECT DISTINCT wine.wine_id, wine_name, variety, year, winery_name, region_name, cost, item_id, qty, on_hand, sum(qty) ,sum(price)
             FROM wine
             JOIN wine_variety
@@ -55,9 +45,7 @@
             JOIN items 
             ON wine.wine_id = items.wine_id 
             JOIN grape_variety
-            ON wine_variety.variety_id = grape_variety.variety_id
-            WHERE wine_variety.id = 1 
-            AND inventory.inventory_id = 1';
+            ON wine_variety.variety_id = grape_variety.variety_id';
             
    # Append To Query
 	if ( ! strlen($wine_name) == 0) {
@@ -70,7 +58,7 @@
       $query .= " AND region.region_id = '$region'";
    }
    if (isset($grape_variety) && $grape_variety != "All"){
-      $query .= " AND variety.grape_variety = '$grape_variety'";
+      $query .= " AND grape_variety.variety_id = '$grape_variety'";
    }   
    if (isset($stock_min)){
       $query .= " AND inventory.on_hand >= '$stock_min'";

@@ -49,9 +49,7 @@
       JOIN items 
       ON wine.wine_id = items.wine_id 
       JOIN grape_variety
-      ON wine_variety.variety_id = grape_variety.variety_id
-      WHERE wine_variety.id = 1 
-      AND inventory.inventory_id = 1';
+      ON wine_variety.variety_id = grape_variety.variety_id';
 
    $pdoarray = array();
      
@@ -70,7 +68,7 @@
       array_push($pdoarray, $region);
    }
    if (isset($grape_variety) && $grape_variety != "All"){
-      $query .= " AND variety.grape_variety = ?";
+      $query .= " AND grape_variety.variety_id = ?";
       array_push($pdoarray, $grape_variety);
    }   
    if (isset($stock_min)){
