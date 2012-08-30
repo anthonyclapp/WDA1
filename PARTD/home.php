@@ -3,54 +3,40 @@
 	# Includes
 	require_once 'includes/db_connect.php';
 	require_once 'includes/functions.php';
-	
+ 
+   try {
+    $db = new PDO(
+      "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME,
+      DB_USER,
+      DB_PW
+    );
+}
+  catch(PDOException $e) {
+    echo $e->getMessage();
+  }
 	# Variables
-		
-		# Regions
-		$query   = 'SELECT * FROM region';
-		$regions = sqlToArray($query);
-		unset($regions[count($regions)-1]);
+      $query = "SELECT on_hand FROM inventory ORDER BY on_hand ASC limit 1;";
+      foreach ($db->query($query) as $row) {
+      $stock_min = $row['on_hand'];
+      } 
 
-		# Grape Varieties
-		$query = 'SELECT * FROM grape_variety';
-		$grape_varieties = sqlToArray($query);
-		unset($grape_varieties[count($grape_varieties)-1]);
+      $query = "SELECT on_hand FROM inventory ORDER BY on_hand DESC limit 1;";
+      foreach ($db->query($query) as $row) {
+      $stock_max = $row['on_hand'];
+      }
 
-		# Year - Min
-		$query   = 'SELECT year FROM wine ORDER BY year ASC limit 1';
-		$results = sqlToArray($query);
-		$year_min = $results[0]['year'];
-		
-		# Year - Max
-		$query   = 'SELECT year FROM wine ORDER BY year DESC limit 1';
-		$results = sqlToArray($query);
-		$year_max = $results[0]['year'];
-
-		# Stock - Min
-		$query   = 'SELECT on_hand FROM inventory ORDER BY on_hand ASC limit 1';
-		$results = sqlToArray($query);
-		$stock_min = $results[0]['on_hand'];
-		
-		# Stock - Max
-		$query   = 'SELECT on_hand FROM inventory ORDER BY on_hand DESC limit 1';
-		$results = sqlToArray($query);
-		$stock_max = $results[0]['on_hand'];		
-
-		# Cost - Min
 		$query   = 'SELECT cost FROM inventory ORDER BY cost ASC limit 1';
-		$results = sqlToArray($query);
-		$cost_min = $results[0]['cost'];
-		
-		# Cost - Max
+		foreach ($db->query($query) as $row) {
+		$cost_min = $row['cost'];
+		}
+      
 		$query   = 'SELECT cost FROM inventory ORDER BY cost DESC limit 1';
-		$results = sqlToArray($query);
-		$cost_max = $results[0]['cost'];		
-				
-		
-		
-	# Code
-	
+		foreach ($db->query($query) as $row) {
+		$cost_max = $row['cost'];
+      }
+# Code    
 ?>
+
 <html>
 	<head>
 		<title>WDA - Assignment 1 - Part B - Home</title>
@@ -66,7 +52,7 @@
 				var wine_name		= document.forms["form"]["wine_name"].value;
 				var winery_name 	= document.forms["form"]["winery_name"].value;
 				var region 			= document.forms["form"]["region"].value;
-				var grape_variety 	= document.forms["form"]["grape_variety"].value;
+				var grape_variety = document.forms["form"]["grape_variety"].value;
 				var year_min 		= parseInt(document.forms["form"]["year_min"].value);
 				var year_max 		= parseInt(document.forms["form"]["year_max"].value);				
 				var stock_min 		= parseInt(document.forms["form"]["stock_min"].value);
@@ -131,7 +117,7 @@
 					<td>
 						<select name="region">
 							<?php
-								foreach ($regions as $region) {
+								foreach ($db->query('SELECT * FROM region') as $region) {
 									$id 	= $region['region_id'];
 									$name 	= $region['region_name'];
 									echo '<option value="'.$id.'">'.$name.'</option>';
@@ -146,7 +132,7 @@
 						<select name="grape_variety">
 							<option id='0'>All</option>
 							<?php
-								foreach ($grape_varieties as $g) {
+								foreach ($db->query('SELECT * FROM grape_variety') as $g) {
 									$id 	= $g['variety_id'];
 									$name 	= $g['variety'];
 									echo '<option value="'.$id.'">'.$name.'</option>';
@@ -160,20 +146,20 @@
 					<td>
 						<select name="year_min">
 							<?php
-								$count = $year_min;
-								while ($count != $year_max) {
-									echo '<option value="'.$count.'">'.$count.'</option>';
-									$count ++;
-								}
+                     		
+							$query = "SELECT DISTINCT year from wine ORDER BY year ASC;";
+                      foreach ($db->query($query) as $row) {
+                           echo "<option value='" . $row['year'] . "'>" . $row['year'] . " </option>";
+                      } 
 							?>
 						</select>			
 						<select name="year_max">
-							<?php
-								$count = $year_max;
-								while ($count != $year_min) {
-									echo '<option value="'.$count.'">'.$count.'</option>';
-									$count --;
-								}
+						<?php
+                     		
+							$query = "SELECT DISTINCT year from wine ORDER BY year DESC;";
+                      foreach ($db->query($query) as $row) {
+                           echo "<option value='" . $row['year'] . "'>" . $row['year'] . " </option>";
+                      } 
 							?>
 						</select>			
 					</td>
@@ -186,8 +172,8 @@
 					<td>
 						<select name="stock_min">
 							<?php
-								$count = $stock_min;
-								while ($count != $stock_max) {
+								$count = round($stock_min);
+								while ($count <= $stock_max) {
 									echo '<option value="'.$count.'">'.$count.'</option>';
 									$count ++;
 								}
@@ -195,11 +181,11 @@
 						</select>			
 						<select name="stock_max">
 							<?php
-								$count = $stock_max;
-								while ($count != $stock_min) {
+                     $count = round($stock_max);
+                      while ($count >= $stock_min) {
 									echo '<option value="'.$count.'">'.$count.'</option>';
 									$count --;
-								}
+                       }
 							?>
 						</select>			
 					</td>
@@ -212,8 +198,8 @@
 					<td>
 						<select name="cost_min">
 							<?php
-								$count = round($cost_min);
-								while ($count <= $cost_max) {
+                        $count = round($cost_min);
+                        while ($count <= $cost_max) {
 									echo '<option value="'.$count.'">$'.$count.'</option>';
 									$count ++;
 								}
@@ -221,7 +207,7 @@
 						</select>			
 						<select name="cost_max">
 							<?php
-								$count = round($cost_max);
+                        $count = round($cost_max);
 								while ($count >= $cost_min) {
 									echo '<option value="'.$count.'">$'.$count.'</option>';
 									$count --;

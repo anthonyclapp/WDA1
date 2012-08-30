@@ -1,0 +1,64 @@
+[ Form Elements - Page 1 - WDA A1 ]
+
+	[ wine_name ]
+		
+			-> Type: text
+			-> Validation: null check
+			
+			
+	[ winery_name ]
+
+			-> Type: text
+			-> Validation: null check
+			
+	[ region ]
+
+			-> Type: select
+			-> Validation: none
+			-> First Element: all
+			
+	[ grape_variety ]
+
+			-> Type: select
+			-> Validation: none
+			-> First Element: all
+			
+	[ year_min ]
+
+			-> Type: select
+			-> Validation: cant exceed max
+			-> First Element: <- populated by sql. order asc ->
+			
+	[ year_max ]
+
+			-> Type: select
+			-> Validation: cant be less than min
+			-> First Element: <- populated by sql, order desc ->
+
+	[ stock_min ]
+
+			-> Type: select
+			-> Validation: cant exceed max
+			-> First Element: <- populated by sql. order asc ->
+			
+	[ stock_max ]
+
+			-> Type: select
+			-> Validation: cant be less than min
+			-> First Element: <- populated by sql, order desc ->
+			
+			
+	[ cost_min ]
+
+			-> Type: select
+			-> Validation: cant exceed max
+			-> First Element: <- populated by sql. order asc ->
+			
+	[ cost_max ]
+
+			-> Type: select
+			-> Validation: cant be less than min
+			-> First Element: <- populated by sql, order desc ->
+			
+
+			
