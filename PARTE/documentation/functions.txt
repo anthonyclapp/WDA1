@@ -1,0 +1,26 @@
+[ Functions - General - WDA A1 ]
+
+	[ functions.js ]
+
+		[ nullCheck ]
+		
+			-> Accepts: String
+			-> Purpose: Checks String Length
+			-> Returns: Boolean
+		
+
+		[ rangeCheck ]
+		
+			-> Accepts: Two Integers (min, max)
+			-> Purpose: Check if min is more than max or max less than min
+			-> Returns: Boolean	
+			
+	[ functions.php ]
+		
+		[ sqlToArray ]
+		
+			-> Accepts: Query
+			-> Purpose: Return array of elements
+			-> Returns: Array 
+			-> Type: PHP
+		

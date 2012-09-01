@@ -9,7 +9,7 @@
 	/**
 	 * Hostname and port mysql is running on (can't use localhost)
 	 */
-	define('DB_HOST',   'yallara.cs.rmit.edu.au:54931');
+	define('DB_HOST',   'localhost');
 	/**
 	 * Name of database to connect to
 	 */

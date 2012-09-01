@@ -1,0 +1,16 @@
+[ pages ]
+
+	[ content ]
+	
+		-> home.php
+			-> Purpose: Search Home Page
+			-> Includes: db_connect.php, functions.php, functions.js
+			
+	
+	[ includes ]
+	
+		-> db_connect.php
+			-> Purpose: Connect to database
+			
+		-> functions.php
+			-> Purpose: Contain commonly used functions.
